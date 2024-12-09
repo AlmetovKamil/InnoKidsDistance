@@ -1,9 +1,4 @@
-from django.shortcuts import render
-
-# Create your views here.
-
 from django.contrib.gis.db.models.functions import Distance, Centroid
-from django.contrib.gis.geos import Point
 from django.http import JsonResponse
 from .models import ResidentialBuilding, School, Kindergarten
 
@@ -19,15 +14,15 @@ def building_distances(request):
             .order_by('distance')
             .first()
         )
+        min_distance = 300
 
-        if nearest_school and nearest_school.distance.m > 0:
+        if nearest_school and nearest_school.distance.m > min_distance:
             result.append({
-                'building': building.name,
-                'nearest_school': nearest_school.name,
+                'building': str(building),
+                'nearest_school': str(nearest_school),
                 'distance_to_school': nearest_school.distance.m
             })
 
-        # Find the nearest kindergarten
         nearest_kindergarten = (
             Kindergarten.objects.annotate(centroid=Centroid('geometry'))
             .annotate(distance=Distance(building.centroid, 'centroid'))
@@ -35,10 +30,10 @@ def building_distances(request):
             .first()
         )
 
-        if nearest_kindergarten and nearest_kindergarten.distance.m > 0:
+        if nearest_kindergarten and nearest_kindergarten.distance.m > min_distance:
             result.append({
-                'building': building.name,
-                'nearest_kindergarten': nearest_kindergarten.name,
+                'building': str(building),
+                'nearest_kindergarten': str(nearest_kindergarten),
                 'distance_to_kindergarten': nearest_kindergarten.distance.m
             })
 

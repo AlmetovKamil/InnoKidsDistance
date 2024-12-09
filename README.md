@@ -11,8 +11,8 @@ This project evaluates the proximity of residential buildings to schools and kin
 ## Tech Stack
 - Backend Framework: Python with Django and Django Rest Framework
 - Database: PostgreSQL with PostGIS
-- OSM Data Processing: osm2pgsql
-- Geospatial Libraries: GeoDjango, GDAL, GeoPandas
+- OSM Data Processing: osm2pgsql, osmium
+- Geospatial Libraries: GeoDjango, GDAL
 
 ## How It Works
 1. OSM data is downloaded in .pbf format and imported into PostGIS.
@@ -47,15 +47,9 @@ This project evaluates the proximity of residential buildings to schools and kin
 
 ---
 
-1. hstore extenstion should be created:
+2. Download https://download.geofabrik.de/russia/volga-fed-district-latest.osm.pbf 
 
-```sql
-CREATE EXTENSION IF NOT EXISTS hstore;
-```
-
-2. download https://download.geofabrik.de/russia/volga-fed-district-latest.osm.pbf 
-
-3. Extract innopolis from Volga federal descrict:
+3. Extract Innopolis from Volga federal descrict using the city's boundaries:
 
 Innopolis boundaries: https://www.openstreetmap.org/relation/5273126
 
@@ -63,15 +57,29 @@ Get boundaries:
 ```bash
 osmium getid -r -t volga-fed-district-latest.osm.pbf r5273126 -o innopolis-boundary.osm.pbf 
 ```
-Extract innopolis:
 
+Extract innopolis:
 ```bash
 osmium extract  -p innopolis-boundary.osm.pbf volga-fed-district-latest.osm.pbf -o innopolis.osm.pbf
 ```
+
 Import to postgres:
 ```bash
 PGPASSWORD=postgres osm2pgsql -d innokidsdistance -U postgres -H localhost -P 5432 --slim --create --hstore --latlong ~/innopolis.osm.pbf
 ```
+
+4. Create models for Buildings
+
+5. Create a command to fill the django models' tables with OSM data
+
+To run this command:
+```bash
+docker compose exec -it api python manage.py load_buildings
+```
+
+6. Create an endpoint:
+
+It's available at http://localhost:8000/building-distances/
 
 
 `docker compose exec -it api chown -R inno:inno /app`

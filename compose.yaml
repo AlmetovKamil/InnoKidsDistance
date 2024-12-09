@@ -1,3 +1,4 @@
+
 name: inno-kids-distance
 services:
   postgres:
@@ -8,8 +9,7 @@ services:
       - POSTGRES_DBNAME=${POSTGRES_DBNAME:-innokidsdistance}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASS=${POSTGRES_PASS:-postgres}
-      - POSTGRES_MULTIPLE_EXTENSIONS=postgis,uuid-ossp
-      # https://github.com/kartoza/docker-postgis/issues/412
+      - POSTGRES_MULTIPLE_EXTENSIONS=postgis,uuid-ossp,hstore
       - SCRIPTS_LOCKFILE_DIR=/var/lock/postgresql
       - RECREATE_DATADIR=${POSTGRES_RECREATE_DB:-false}
       - IGNORE_INIT_HOOK_LOCKFILE=${POSTGRES_RECREATE_DB:-false}
@@ -18,7 +18,7 @@ services:
       - DEFAULT_CTYPE=ru_RU.utf-8
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - ./runtime/postgres-data:/var/lib/postgresql/15/main
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -h postgres -U postgres"]
       interval: 10s
@@ -42,4 +42,4 @@ services:
         condition: service_healthy
     stop_signal: SIGINT
     volumes:
-    - ./backend:/app:cached
+    - ./backend:/app

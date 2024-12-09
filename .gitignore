@@ -13,3 +13,4 @@ __pycache__
 
 *.osm.pbf
 postgres_data
+runtime/** */
