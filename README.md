@@ -67,3 +67,8 @@ This project evaluates the proximity of residential buildings to schools and kin
 ```bash
 PGPASSWORD=postgres osm2pgsql -d innokidsdistance -U postgres -H localhost -P 5432 --slim --create --hstore --latlong ~/innopolis.osm.pbf
 ```
+
+# P.S.
+
+The minimum distance can be set by enviroment variable `MIN_DISTANCE` (default 500). If it's 500, there are no such
+building<->school/kindergarten pairs.
