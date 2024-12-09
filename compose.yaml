@@ -35,6 +35,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
       - DB_HOST=${DB_HOST:-postgres}
       - DB_PORT=${DB_PORT:-5432}
+      - MIN_DISTANCE=${MIN_DISTANCE:-500}
     ports:
       - ${BACKEND_API_PORT:-8000}:8000
     depends_on:

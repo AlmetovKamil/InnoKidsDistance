@@ -1,6 +1,7 @@
 from django.contrib.gis.db.models.functions import Distance, Centroid
 from django.http import JsonResponse
 from .models import ResidentialBuilding, School, Kindergarten
+from core.settings import MIN_DISTANCE
 
 def building_distances(request):
     buildings = ResidentialBuilding.objects.annotate(centroid=Centroid('geometry'))
@@ -14,7 +15,7 @@ def building_distances(request):
             .order_by('distance')
             .first()
         )
-        min_distance = 300
+        min_distance = MIN_DISTANCE
 
         if nearest_school and nearest_school.distance.m > min_distance:
             result.append({
