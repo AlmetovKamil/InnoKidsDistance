@@ -1,5 +1,5 @@
 
-# Project Name: Proximity Checker for Schools and Kindergartens
+# Proximity Checker for Schools and Kindergartens
 This project evaluates the proximity of residential buildings to schools and kindergartens in the city of Innopolis. It identifies cases where walking distances exceed 500 meters, helping urban planners ensure accessibility to essential educational facilities.
 
 ## Features
