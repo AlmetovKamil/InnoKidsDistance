@@ -1,0 +1,15 @@
+/.vscode
+/venv
+
+.env
+.env.*
+!.env.example
+
+*.log
+__pycache__
+.pytest_cache
+*.pyc
+*.pyo
+
+*.osm.pbf
+postgres_data

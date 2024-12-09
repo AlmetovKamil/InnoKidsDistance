@@ -1,0 +1,45 @@
+name: inno-kids-distance
+services:
+  postgres:
+    image: kartoza/postgis:15-3.4
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    environment:
+      - POSTGRES_DBNAME=${POSTGRES_DBNAME:-innokidsdistance}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASS=${POSTGRES_PASS:-postgres}
+      - POSTGRES_MULTIPLE_EXTENSIONS=postgis,uuid-ossp
+      # https://github.com/kartoza/docker-postgis/issues/412
+      - SCRIPTS_LOCKFILE_DIR=/var/lock/postgresql
+      - RECREATE_DATADIR=${POSTGRES_RECREATE_DB:-false}
+      - IGNORE_INIT_HOOK_LOCKFILE=${POSTGRES_RECREATE_DB:-false}
+      - DEFAULT_ENCODING=UTF-8
+      - DEFAULT_COLLATION=ru_RU.utf-8
+      - DEFAULT_CTYPE=ru_RU.utf-8
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h postgres -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: backend
+      target: api
+    environment:
+      - DB_NAME=${DB_NAME:-innokidsdistance}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_HOST=${DB_HOST:-postgres}
+      - DB_PORT=${DB_PORT:-5432}
+    ports:
+      - ${BACKEND_API_PORT:-8000}:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    stop_signal: SIGINT
+    volumes:
+    - ./backend:/app:cached
