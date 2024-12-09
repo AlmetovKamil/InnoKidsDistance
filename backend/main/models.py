@@ -15,15 +15,12 @@ class Building(models.Model):
 
 
 class ResidentialBuilding(Building):
-    class Meta:
-        db_table = '"buildings"."residential_builing"'
+    pass
 
 
 class School(Building):
-    class Meta:
-        db_table = '"buildings"."school"'
+    pass
 
 
 class Kindergarten(Building):
-    class Meta:
-        db_table = '"buildings"."kindergarten"'
+    pass
