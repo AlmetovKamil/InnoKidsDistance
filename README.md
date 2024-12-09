@@ -70,5 +70,8 @@ PGPASSWORD=postgres osm2pgsql -d innokidsdistance -U postgres -H localhost -P 54
 
 # P.S.
 
-The minimum distance can be set by enviroment variable `MIN_DISTANCE` (default 500). If it's 500, there are no such
+- The minimum distance can be set by enviroment variable `MIN_DISTANCE` (default 500). If it's 500, there are no such
 building<->school/kindergarten pairs.
+
+- I don't check is the buildings are inside the administrative boundaries of Innopolis because I import
+only items that are inside the borders. But it's better to add this check to generalize the solution.
